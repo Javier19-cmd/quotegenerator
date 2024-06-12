@@ -10,16 +10,12 @@ interface Quote {
 }
 
 const RandomQuote: React.FC = () => {
-    // Define the state for quotes array
     const [quotes, setQuotes] = useState<Quote[]>([]);
-    
-    // Set the state with the correct type for a single quote
     const [quote, setQuote] = useState<Quote>({
         text: 'Difficulties increase the nearer we get to the goal.',
         author: 'Johann Wolfgang von Goethe'
     });
 
-    // Load quotes from the API
     useEffect(() => {
         async function loadQuotes() {
             const response = await fetch('https://type.fit/api/quotes');
@@ -29,7 +25,6 @@ const RandomQuote: React.FC = () => {
         loadQuotes();
     }, []);
 
-    // Get a random quote
     const random = () => {
         if (quotes.length > 0) {
             const index = Math.floor(Math.random() * quotes.length);
@@ -50,8 +45,8 @@ const RandomQuote: React.FC = () => {
             <div className="bottom">
               <div className="author">{quote.author.split(",")[0]}</div>
               <div className="icons">
-                <img src={reload_icon} onClick={() => {random()}} className='reload-icon' alt="Reload" />
-                <img src={twitter_icon} onClick={() => {twitter()}} className="twitter-icon" alt="Twitter" />
+                <img src={reload_icon} onClick={random} className='reload-icon' alt="Reload" />
+                <img src={twitter_icon} onClick={twitter} className="twitter-icon" alt="Twitter" />
               </div>
             </div>
           </div>
