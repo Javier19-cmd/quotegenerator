@@ -10,16 +10,18 @@
 
 body {
     background-color: var(--bg-color);
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: auto;
-    margin-top: 100px; /* Reduce the top margin */
+    margin: 100px auto; /* Adjust the top margin */
     background: var(--container-bg);
-    width: 800px;
+    width: 90%;
+    max-width: 800px;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -31,9 +33,9 @@ body {
 }
 
 .quote {
-    padding: 40px 60px; /* Reduce padding */
+    padding: 20px; /* Reduce padding for responsiveness */
     color: var(--text-color);
-    font-size: 28px; /* Reduce font size */
+    font-size: 24px; /* Adjust font size for responsiveness */
     text-align: center;
     line-height: 1.5;
 }
@@ -85,4 +87,46 @@ body {
 .twitter-icon {
     width: 50px; /* Increase the width for the Twitter icon */
     height: 50px; /* Increase the height for the Twitter icon */
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        margin-top: 50px;
+    }
+
+    .quote {
+        padding: 20px;
+        font-size: 20px;
+    }
+
+    .bottom {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .author {
+        margin-bottom: 10px;
+    }
+
+    .icons {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .quote {
+        font-size: 18px;
+    }
+
+    .reload-icon, .twitter-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .twitter-icon {
+        width: 45px;
+        height: 45px;
+    }
 }
