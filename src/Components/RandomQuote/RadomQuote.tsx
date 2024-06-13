@@ -20,26 +20,48 @@ const RandomQuote: React.FC = () => {
         text: 'Difficulties increase the nearer we get to the goal.',
         author: 'Johann Wolfgang von Goethe'
     });
-    const [favorites, setFavorites] = useState<Quote[]>([]);
-    const [history, setHistory] = useState<Quote[]>([]);
+    const [favorites, setFavorites] = useState<Quote[]>(() => {
+        const saved = localStorage.getItem('favorites');
+        return saved ? JSON.parse(saved) : [];
+    });
+    const [history, setHistory] = useState<Quote[]>(() => {
+        const saved = localStorage.getItem('history');
+        return saved ? JSON.parse(saved) : [];
+    });
     const [showHistory, setShowHistory] = useState<boolean>(false);
     const [showFavorites, setShowFavorites] = useState<boolean>(false);
 
     useEffect(() => {
-        async function loadQuotes() {
-            const response = await fetch('https://type.fit/api/quotes');
-            const quotes: Quote[] = await response.json();
-            setQuotes(quotes);
-        }
-        loadQuotes();
-    }, []);
+      async function loadQuotes() {
+          const response = await fetch('https://type.fit/api/quotes');
+          const quotes: Quote[] = await response.json();
+          setQuotes(quotes);
+      }
+      loadQuotes();
+  
+      const intervalId = setInterval(loadQuotes, 60000); // Carga citas adicionales cada minuto
+      return () => clearInterval(intervalId); // Limpia el intervalo cuando el componente se desmonta
+  }, []);
+  
+
+    useEffect(() => {
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+    }, [favorites]);
+
+    useEffect(() => {
+        localStorage.setItem('history', JSON.stringify(history));
+    }, [history]);
 
     const random = () => {
         if (quotes.length > 0) {
             const index = Math.floor(Math.random() * quotes.length);
             const newQuote = quotes[index];
             setQuote(newQuote);
-            setHistory([...history, newQuote]);
+            setHistory(prevHistory => {
+                const updatedHistory = [...prevHistory, newQuote];
+                localStorage.setItem('history', JSON.stringify(updatedHistory));
+                return updatedHistory;
+            });
         }
     }
 
@@ -49,7 +71,11 @@ const RandomQuote: React.FC = () => {
     }
 
     const addToFavorites = () => {
-        setFavorites([...favorites, quote]);
+        setFavorites(prevFavorites => {
+            const updatedFavorites = [...prevFavorites, quote];
+            localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+            return updatedFavorites;
+        });
     }
 
     const toggleHistoryModal = () => {
