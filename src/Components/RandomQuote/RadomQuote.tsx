@@ -17,8 +17,8 @@ interface Quote {
 const RandomQuote: React.FC = () => {
     const [quotes, setQuotes] = useState<Quote[]>([]);
     const [quote, setQuote] = useState<Quote>({
-        text: 'Difficulties increase the nearer we get to the goal.',
-        author: 'Johann Wolfgang von Goethe'
+        text: 'The only limit to our realization of tomorrow is our doubts of today.',
+        author: 'Franklin D. Roosevelt'
     });
     const [favorites, setFavorites] = useState<Quote[]>(() => {
         const saved = localStorage.getItem('favorites');
@@ -65,8 +65,13 @@ const RandomQuote: React.FC = () => {
         }
     }
 
+    const getAuthor = (author: string) => {
+        const authorName = author.split(",")[0];
+        return authorName === 'type.fit' || !authorName ? 'Unknown author' : authorName;
+    }
+
     const twitter = () => {
-        const url = `https://twitter.com/intent/tweet?text="${quote.text}" - ${quote.author.split(",")[0]}`;
+        const url = `https://twitter.com/intent/tweet?text="${quote.text}" - ${getAuthor(quote.author)}`;
         window.open(url, '_blank');
     }
 
@@ -92,7 +97,7 @@ const RandomQuote: React.FC = () => {
             <div>
                 <div className="line"></div>
                 <div className="bottom">
-                    <div className="author">{quote.author.split(",")[0]}</div>
+                    <div className="author">{getAuthor(quote.author)}</div>
                     <div className="icons">
                         <img src={reload_icon} onClick={random} className='reload-icon' alt="Reload" />
                         <img src={twitter_icon} onClick={twitter} className="twitter-icon" alt="Twitter" />
@@ -110,7 +115,7 @@ const RandomQuote: React.FC = () => {
                 <Modal.Body>
                     <ul>
                         {history.map((q, index) => (
-                            <li key={index}>"{q.text}" - {q.author.split(",")[0]}</li>
+                            <li key={index}>"{q.text}" - {getAuthor(q.author)}</li>
                         ))}
                     </ul>
                 </Modal.Body>
@@ -128,7 +133,7 @@ const RandomQuote: React.FC = () => {
                 <Modal.Body>
                     <ul>
                         {favorites.map((q, index) => (
-                            <li key={index}>"{q.text}" - {q.author.split(",")[0]}</li>
+                            <li key={index}>"{q.text}" - {getAuthor(q.author)}</li>
                         ))}
                     </ul>
                 </Modal.Body>
