@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import './RandomQuote.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Modal, Button } from 'react-bootstrap'
 import twitter_icon from '../Assets/twitter.png'
 import reload_icon from '../Assets/reload.png'
+import star_icon from '../Assets/star.png'
+import history_icon from '../Assets/history.png'
+import history_fav_icon from '../Assets/history_fav.png'
 
 // Define the type for the quote object
 interface Quote {
@@ -15,6 +20,10 @@ const RandomQuote: React.FC = () => {
         text: 'Difficulties increase the nearer we get to the goal.',
         author: 'Johann Wolfgang von Goethe'
     });
+    const [favorites, setFavorites] = useState<Quote[]>([]);
+    const [history, setHistory] = useState<Quote[]>([]);
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+    const [showFavorites, setShowFavorites] = useState<boolean>(false);
 
     useEffect(() => {
         async function loadQuotes() {
@@ -28,7 +37,9 @@ const RandomQuote: React.FC = () => {
     const random = () => {
         if (quotes.length > 0) {
             const index = Math.floor(Math.random() * quotes.length);
-            setQuote(quotes[index]);
+            const newQuote = quotes[index];
+            setQuote(newQuote);
+            setHistory([...history, newQuote]);
         }
     }
 
@@ -37,21 +48,72 @@ const RandomQuote: React.FC = () => {
         window.open(url, '_blank');
     }
 
+    const addToFavorites = () => {
+        setFavorites([...favorites, quote]);
+    }
+
+    const toggleHistoryModal = () => {
+        setShowHistory(!showHistory);
+    }
+
+    const toggleFavoritesModal = () => {
+        setShowFavorites(!showFavorites);
+    }
+
     return (
         <div className='container'>
-          <div className="quote">{quote.text}</div>
-          <div>
-            <div className="line"></div>
-            <div className="bottom">
-              <div className="author">{quote.author.split(",")[0]}</div>
-              <div className="icons">
-                <img src={reload_icon} onClick={random} className='reload-icon' alt="Reload" />
-                <img src={twitter_icon} onClick={twitter} className="twitter-icon" alt="Twitter" />
-              </div>
+            <div className="quote">{quote.text}</div>
+            <div>
+                <div className="line"></div>
+                <div className="bottom">
+                    <div className="author">{quote.author.split(",")[0]}</div>
+                    <div className="icons">
+                        <img src={reload_icon} onClick={random} className='reload-icon' alt="Reload" />
+                        <img src={twitter_icon} onClick={twitter} className="twitter-icon" alt="Twitter" />
+                        <img src={star_icon} onClick={addToFavorites} className="social-icon" alt="Favorite" />
+                        <img src={history_icon} className="social-icon" alt="History" onClick={toggleHistoryModal} />
+                        <img src={history_fav_icon} className="social-icon" alt="Favorites" onClick={toggleFavoritesModal} />
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <Modal show={showHistory} onHide={toggleHistoryModal} className="custom-modal">
+                <Modal.Header closeButton>
+                    <Modal.Title>Historial de citas</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ul>
+                        {history.map((q, index) => (
+                            <li key={index}>"{q.text}" - {q.author.split(",")[0]}</li>
+                        ))}
+                    </ul>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={toggleHistoryModal}>
+                        Cerrar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showFavorites} onHide={toggleFavoritesModal} className="custom-modal">
+                <Modal.Header closeButton>
+                    <Modal.Title>Lista de favoritos</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ul>
+                        {favorites.map((q, index) => (
+                            <li key={index}>"{q.text}" - {q.author.split(",")[0]}</li>
+                        ))}
+                    </ul>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={toggleFavoritesModal}>
+                        Cerrar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
-    )      
+    )
 }
 
 export default RandomQuote
