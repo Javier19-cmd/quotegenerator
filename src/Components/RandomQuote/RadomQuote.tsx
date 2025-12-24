@@ -30,8 +30,8 @@ const RandomQuote: React.FC = () => {
     // Estados de UI
     const [showHistory, setShowHistory] = useState<boolean>(false);
     const [showFavorites, setShowFavorites] = useState<boolean>(false);
-    const [fade, setFade] = useState(false); // Para animación
-    const [copied, setCopied] = useState(false); // Feedback de copiado
+    const [fade, setFade] = useState(false);
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         async function loadQuotes() {
@@ -44,9 +44,6 @@ const RandomQuote: React.FC = () => {
             }
         }
         loadQuotes();
-        // Nota: He quitado el intervalo automático de 60s. 
-        // En UX de lectura, que el texto cambie solo puede ser molesto. 
-        // Es mejor dejar el control al usuario.
     }, []);
 
     useEffect(() => {
